@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TOEIC (400-500) set-1 – Boo-riculum</title>
+  <title>Boo-riculum – Vehicles Deck</title>
   <link rel="icon" type="image/png" href="booha-ghost.png">
   <style>
     :root { --ink:#222; --muted:#444; --accent:#0b78ff; --ok:#22c55e; --bad:#ef4444; }
@@ -12,7 +12,7 @@
       margin:0;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;
       color:var(--ink);
-      background:url('Booha card.jpg') center/cover fixed no-repeat;
+      background:url('booha-card.jpg') center/cover fixed no-repeat;
     }
     .wrap{max-width:900px;margin:0 auto;padding:16px 16px 24px;}
     header{
@@ -21,7 +21,7 @@
       border-radius:16px;box-shadow:0 4px 10px rgba(0,0,0,0.15)
     }
     header h1{
-      font-size:18px;margin:0;font-weight:800;letter-spacing:.3px;
+      font-size:18px;margin:0;font-weight:700;letter-spacing:.2px;
       background:linear-gradient(90deg,#7dd3fc,#60a5fa,#a78bfa,#f472b6);
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;
       display:flex;align-items:center;gap:8px
@@ -39,7 +39,7 @@
     .pill{border:1px solid #ccc;border-radius:999px;padding:6px 10px;font-size:12px;background:rgba(255,255,255,0.7)}
     .card{
       user-select:none;-webkit-user-select:none;display:flex;flex-direction:column;justify-content:center;align-items:center;
-      text-align:center;background:url('Booha card.jpg') center/cover no-repeat;
+      text-align:center;background:url('booha-card.jpg') center/cover no-repeat;
       border:1px solid #ccc;border-radius:24px;min-height:56vh;margin:16px auto;padding:22px 18px 28px;
       box-shadow:0 10px 40px rgba(0,0,0,.25); position:relative;
     }
@@ -67,21 +67,17 @@
     }
     .progress{height:8px;border-radius:999px;background:#eee;overflow:hidden}
     .progress>span{display:block;height:100%;background:linear-gradient(90deg,#7dd3fc,#60a5fa,#a78bfa,#f472b6);width:0%}
-    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-    @media (max-width:700px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));} .main{font-size:24px}}
-    a{color:#0b78ff;text-decoration:none}
     .hidden{display:none}
     .options{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
     .optbtn{border:1px solid #ccc;border-radius:12px;padding:10px 14px;background:rgba(255,255,255,0.95);cursor:pointer}
     .optbtn.ok{background:#dcfce7;border-color:#86efac;color:#166534}
     .optbtn.bad{background:#fee2e2;border-color:#fca5a5;color:#991b1b}
-    .small{font-size:15px; line-height:1.45;}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1><img src="booha-ghost.png" alt="Booha ghost"> Boo-riculum – TOEIC (400-500) set-1</h1>
+      <h1><img src="booha-ghost.png" alt="Booha ghost"> Boo-riculum – Vehicles</h1>
       <div class="controls">
         <select id="mode" aria-label="Mode">
           <option value="vocab-j2e">Vocab: 🇯🇵 → 🇺🇸</option>
@@ -105,114 +101,157 @@
 
     <div class="footer">
       <div class="row">
-        <span class="pill" title="Left / Right keys">Keyboard: ← →</span>
-        <span class="pill" title="Space to flip">Space = Flip</span>
-        <button id="btnPrev" title="← or swipe right">◀︎ Prev</button>
-        <button id="btnFlip" title="Tap / Space">Flip</button>
-        <button id="btnNext" title="→ or swipe left">Next ▶︎</button>
-        <button id="btnShuffle" title="Shuffle deck">Shuffle</button>
+        <span class="pill">Keyboard: ← →</span>
+        <span class="pill">Space = Flip</span>
+        <button id="btnPrev">◀︎ Prev</button>
+        <button id="btnFlip">Flip</button>
+        <button id="btnNext">Next ▶︎</button>
+        <button id="btnShuffle">Shuffle</button>
       </div>
       <div style="min-width:180px;text-align:right">
         <div id="counter" class="muted">0 / 0</div>
-        <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+        <div class="progress"><span id="bar"></span></div>
       </div>
     </div>
   </div>
 
   <script>
     // ---------------- Data ----------------
-    const VOCAB = [
-      // Places & common nouns/verbs (for vocab drills)
-      { en:'station', ja:'駅', hira:'えき' },
-      { en:'hotel', ja:'ホテル', hira:'ほてる' },
-      { en:'restaurant', ja:'レストラン', hira:'れすとらん' },
-      { en:'store', ja:'店', hira:'みせ' },
-      { en:'bank', ja:'銀行', hira:'ぎんこう' },
-      { en:'park', ja:'公園', hira:'こうえん' },
-      { en:'bus', ja:'バス', hira:'ばす' },
-      { en:'train', ja:'電車', hira:'でんしゃ' },
-      { en:'ticket', ja:'切符', hira:'きっぷ' },
-      { en:'bill (check)', ja:'会計', hira:'かいけい' },
-      { en:'to pay', ja:'払う', hira:'はらう' },
-      { en:'to leave (depart)', ja:'出発する', hira:'しゅっぱつする' },
-      { en:'to arrive', ja:'到着する', hira:'とうちゃくする' },
-      { en:'to order', ja:'注文する', hira:'ちゅうもんする' },
-      { en:'to ask', ja:'たずねる', hira:'たずねる' },
-      { en:'to check', ja:'確認する', hira:'かくにんする' },
-      { en:'to walk', ja:'歩く', hira:'あるく' },
-      { en:'to take (a train)', ja:'乗る', hira:'のる' },
+    // Vocabulary (Vehicles)
+    const VEHICLES = [
+      { en: 'car',        ja: '車',       hira: 'くるま' },
+      { en: 'bus',        ja: 'バス',     hira: 'ばす' },
+      { en: 'train',      ja: '電車',     hira: 'でんしゃ' },
+      { en: 'bicycle',    ja: '自転車',   hira: 'じてんしゃ' },
+      { en: 'motorcycle', ja: 'バイク',   hira: 'ばいく' },
+      { en: 'truck',      ja: 'トラック', hira: 'とらっく' },
+      { en: 'airplane',   ja: '飛行機',   hira: 'ひこうき' },
+      { en: 'boat',       ja: 'ボート',   hira: 'ぼーと' },
+      { en: 'subway',     ja: '地下鉄',   hira: 'ちかてつ' },
+      { en: 'taxi',       ja: 'タクシー', hira: 'たくしー' },
     ];
 
+    // Sentences (EN → JA + hira) — includes Taxi (#10)
     const SENTENCES = [
-      { en:'I bought a ticket at the station.', ja:'私は駅で切符を買いました。', hira:'わたしは えきで きっぷを かいました。' },
-      { en:'She is waiting for the bus.', ja:'彼女はバスを待っています。', hira:'かのじょは ばすを まっています。' },
-      { en:'They arrived at the hotel late.', ja:'彼らはホテルに遅れて到着しました。', hira:'かれらは ほてるに おくれて とうちゃくしました。' },
-      { en:'We ordered food at the restaurant.', ja:'私たちはレストランで料理を注文しました。', hira:'わたしたちは れすとらんで りょうりを ちゅうもんしました。' },
-      { en:'He is walking to the park.', ja:'彼は公園に歩いています。', hira:'かれは こうえんに あるいています。' },
-      { en:'Please check the time on the ticket.', ja:'切符の時間を確認してください。', hira:'きっぷの じかんを かくにんして ください。' },
-      { en:'I will take the train to the city.', ja:'私は電車で街に行きます。', hira:'わたしは でんしゃで まちに いきます。' },
-      { en:'We paid the bill at the restaurant.', ja:'私たちはレストランで会計をしました。', hira:'わたしたちは れすとらんで かいけいを しました。' },
-      { en:'The bus leaves at nine.', ja:'バスは9時に出発します。', hira:'ばすは くじに しゅっぱつします。' },
-      { en:'He asked a clerk for help.', ja:'彼は店員に助けを求めました。', hira:'かれは てんいんに たすけを もとめました。' },
-      { en:'The store opens at 10 a.m.', ja:'店は午前10時に開きます。', hira:'みせは ごぜん じゅうじに あきます。' },
-      { en:'She is paying money at the bank.', ja:'彼女は銀行でお金を払っています。', hira:'かのじょは ぎんこうで おかねを はらっています。' },
+      { en: 'There is a car in the parking lot.', ja: '駐車場に車があります。', hira: 'ちゅうしゃじょう に くるま が あります' },
+      { en: 'The car is blue.', ja: 'その車は青いです。', hira: 'その くるま は あおい です' },
+
+      { en: 'There are many buses at the station.', ja: '駅にバスがたくさんあります。', hira: 'えき に ばす が たくさん あります' },
+      { en: 'The bus is yellow.', ja: 'そのバスは黄色です。', hira: 'その ばす は きいろ です' },
+
+      { en: 'There is a train coming soon.', ja: 'すぐに電車が来ます。', hira: 'すぐ に でんしゃ が きます' },
+      { en: 'The train is fast.', ja: 'その電車は速いです。', hira: 'その でんしゃ は はやい です' },
+
+      { en: 'There is a bicycle in front of the house.', ja: '家の前に自転車があります。', hira: 'いえ の まえ に じてんしゃ が あります' },
+      { en: 'The bicycle is old but reliable.', ja: 'その自転車は古いですが、信頼できます。', hira: 'その じてんしゃ は ふるい ですが、 しんらい できます' },
+
+      { en: 'There is a motorcycle in the garage.', ja: 'ガレージにバイクがあります。', hira: 'がれーじ に ばいく が あります' },
+      { en: 'The motorcycle is loud.', ja: 'そのバイクはうるさいです。', hira: 'その ばいく は うるさい です' },
+
+      { en: 'There is a truck delivering goods.', ja: '商品を届けているトラックがあります。', hira: 'しょうひん を とどけている とらっく が あります' },
+      { en: 'The truck is big and powerful.', ja: 'そのトラックは大きくて力強いです。', hira: 'その とらっく は おおきくて ちからづよい です' },
+
+      { en: 'There is an airplane flying in the sky.', ja: '空に飛んでいる飛行機があります。', hira: 'そら に とんでいる ひこうき が あります' },
+      { en: 'The airplane is white with blue stripes.', ja: 'その飛行機は白くて青いストライプがあります。', hira: 'その ひこうき は しろくて あおい すとらいぷ が あります' },
+
+      { en: 'There is a boat on the lake.', ja: '湖にボートがあります。', hira: 'みずうみ に ぼーと が あります' },
+      { en: 'The boat is small but fast.', ja: 'そのボートは小さいけど速いです。', hira: 'その ぼーと は ちいさい けど はやい です' },
+
+      { en: 'There is a subway station near my house.', ja: '私の家の近くに地下鉄駅があります。', hira: 'わたし の いえ の ちかく に ちかてつえき が あります' },
+      { en: 'The subway is crowded during rush hour.', ja: 'ラッシュアワーの時、地下鉄は混んでいます。', hira: 'らっしゅあわー の とき、 ちかてつ は こんでいます' },
+
+      { en: 'There is a taxi in front of the hotel.', ja: 'ホテルの前にタクシーがあります。', hira: 'ほてる の まえ に たくしー が あります' },
+      { en: 'The taxi is cheap.', ja: 'そのタクシーは安いです。', hira: 'その たくしー は やすい です' },
     ];
 
+    // Q&A (10)
     const QA = [
-      { q_en:'Where did you buy the ticket?', q_ja:'あなたはどこで切符を買いましたか？', q_hira:'あなたは どこで きっぷを かいましたか？',
-        a_en:'I bought it at the station.', a_ja:'駅で買いました。', a_hira:'えきで かいました。' },
-      { q_en:'Who is waiting for the bus?', q_ja:'バスを待っているのは誰ですか？', q_hira:'ばすを まっているのは だれですか？',
-        a_en:'She is waiting for the bus.', a_ja:'彼女がバスを待っています。', a_hira:'かのじょが ばすを まっています。' },
-      { q_en:'When did they arrive at the hotel?', q_ja:'彼らはいつホテルに到着しましたか？', q_hira:'かれらは いつ ほてるに とうちゃくしましたか？',
-        a_en:'They arrived late.', a_ja:'遅れて到着しました。', a_hira:'おくれて とうちゃくしました。' },
-      { q_en:'What did you order at the restaurant?', q_ja:'レストランで何を注文しましたか？', q_hira:'れすとらんで なにを ちゅうもんしましたか？',
-        a_en:'We ordered food.', a_ja:'料理を注文しました。', a_hira:'りょうりを ちゅうもんしました。' },
-      { q_en:'How do you go to the park?', q_ja:'あなたはどうやって公園に行きますか？', q_hira:'あなたは どうやって こうえんに いきますか？',
-        a_en:'I walk to the park.', a_ja:'歩いて公園に行きます。', a_hira:'あるいて こうえんに いきます。' },
-      { q_en:'What time does the bus leave?', q_ja:'バスは何時に出発しますか？', q_hira:'ばすは なんじに しゅっぱつしますか？',
-        a_en:'It leaves at nine.', a_ja:'9時に出発します。', a_hira:'くじに しゅっぱつします。' },
-      { q_en:'Who is paying at the bank?', q_ja:'銀行で払っているのは誰ですか？', q_hira:'ぎんこうで はらっているのは だれですか？',
-        a_en:'She is paying at the bank.', a_ja:'彼女が銀行で払っています。', a_hira:'かのじょが ぎんこうで はらっています。' },
-      { q_en:'Where are they going by train?', q_ja:'彼らは電車でどこに行きますか？', q_hira:'かれらは でんしゃで どこに いきますか？',
-        a_en:'They are going to the city.', a_ja:'街に行きます。', a_hira:'まちに いきます。' },
-      { q_en:'What time does the store open?', q_ja:'店は何時に開きますか？', q_hira:'みせは なんじに あきますか？',
-        a_en:'It opens at 10 a.m.', a_ja:'午前10時に開きます。', a_hira:'ごぜん じゅうじに あきます。' },
-      { q_en:'Who helped the customer?', q_ja:'誰がお客さんを助けましたか？', q_hira:'だれが おきゃくさんを たすけましたか？',
-        a_en:'The clerk helped the customer.', a_ja:'店員が客を助けました。', a_hira:'てんいんが きゃくを たすけました。' },
-      { q_en:'What did you check on the ticket?', q_ja:'切符で何を確認しましたか？', q_hira:'きっぷで なにを かくにんしましたか？',
-        a_en:'I checked the time.', a_ja:'時間を確認しました。', a_hira:'じかんを かくにんしました。' },
-      { q_en:'Who paid the bill?', q_ja:'誰が会計をしましたか？', q_hira:'だれが かいけいを しましたか？',
-        a_en:'We paid the bill.', a_ja:'私たちが会計をしました。', a_hira:'わたしたちが かいけいを しました。' },
+      { q_en:'Where is the car?', q_ja:'車はどこにありますか？', q_hira:'くるま は どこ に ありますか？',
+        a_en:'It is in the parking lot.', a_ja:'駐車場にあります。', a_hira:'ちゅうしゃじょう に あります。' },
+
+      { q_en:'What color is the bus?', q_ja:'バスは何色ですか？', q_hira:'ばす は なにいろ ですか？',
+        a_en:'It is yellow.', a_ja:'黄色です。', a_hira:'きいろ です。' },
+
+      { q_en:'What is coming soon?', q_ja:'すぐに何が来ますか？', q_hira:'すぐ に なに が きますか？',
+        a_en:'A train is coming soon.', a_ja:'電車が来ます。', a_hira:'でんしゃ が きます。' },
+
+      { q_en:'Where is the bicycle?', q_ja:'自転車はどこにありますか？', q_hira:'じてんしゃ は どこ に ありますか？',
+        a_en:'In front of the house.', a_ja:'家の前にあります。', a_hira:'いえ の まえ に あります。' },
+
+      { q_en:'Is the bicycle new?', q_ja:'自転車は新しいですか？', q_hira:'じてんしゃ は あたらしい ですか？',
+        a_en:'No, it is old but reliable.', a_ja:'いいえ、古いですが信頼できます。', a_hira:'いいえ、 ふるい ですが しんらい できます。' },
+
+      { q_en:'Where is the motorcycle?', q_ja:'バイクはどこにありますか？', q_hira:'ばいく は どこ に ありますか？',
+        a_en:'It is in the garage.', a_ja:'ガレージにあります。', a_hira:'がれーじ に あります。' },
+
+      { q_en:'What is the truck doing?', q_ja:'トラックは何をしていますか？', q_hira:'とらっく は なに を していますか？',
+        a_en:'It is delivering goods.', a_ja:'商品を届けています。', a_hira:'しょうひん を とどけて います。' },
+
+      { q_en:'Where is the airplane?', q_ja:'飛行機はどこにありますか？', q_hira:'ひこうき は どこ に ありますか？',
+        a_en:'It is flying in the sky.', a_ja:'空に飛んでいます。', a_hira:'そら に とんで います。' },
+
+      { q_en:'Where is the subway station?', q_ja:'地下鉄駅はどこにありますか？', q_hira:'ちかてつえき は どこ に ありますか？',
+        a_en:'Near my house.', a_ja:'私の家の近くにあります。', a_hira:'わたし の いえ の ちかく に あります。' },
+
+      { q_en:'Where is the taxi?', q_ja:'タクシーはどこにありますか？', q_hira:'たくしー は どこ に ありますか？',
+        a_en:'In front of the hotel.', a_ja:'ホテルの前にあります。', a_hira:'ほてる の まえ に あります。' },
     ];
 
+    // Quiz (10) — vehicle-name answers for consistent 4-choice options
     const QUIZ = [
-      { cloze:'I ___ a ticket at the station.', answers:['bought'], ja:'私は駅で切符を買いました。', hira:'わたしは えきで きっぷを かいました。', full:'I bought a ticket at the station.' },
-      { cloze:'She is ___ for the bus.', answers:['waiting'], ja:'彼女はバスを待っています。', hira:'かのじょは ばすを まっています。', full:'She is waiting for the bus.' },
-      { cloze:'They ___ at the hotel late.', answers:['arrived'], ja:'彼らはホテルに遅れて到着しました。', hira:'かれらは ほてるに おくれて とうちゃくしました。', full:'They arrived at the hotel late.' },
-      { cloze:'We ___ food at the restaurant.', answers:['ordered'], ja:'私たちはレストランで料理を注文しました。', hira:'わたしたちは れすとらんで りょうりを ちゅうもんしました。', full:'We ordered food at the restaurant.' },
-      { cloze:'He is ___ to the park.', answers:['walking'], ja:'彼は公園に歩いています。', hira:'かれは こうえんに あるいています。', full:'He is walking to the park.' },
-      { cloze:'Please ___ the time on the ticket.', answers:['check'], ja:'切符の時間を確認してください。', hira:'きっぷの じかんを かくにんして ください。', full:'Please check the time on the ticket.' },
-      { cloze:'The bus ___ at nine.', answers:['leaves'], ja:'バスは9時に出発します。', hira:'ばすは くじに しゅっぱつします。', full:'The bus leaves at nine.' },
-      { cloze:'We ___ the bill at the restaurant.', answers:['paid'], ja:'私たちはレストランで会計をしました。', hira:'わたしたちは れすとらんで かいけいを しました。', full:'We paid the bill at the restaurant.' },
-      { cloze:'He ___ a clerk for help.', answers:['asked'], ja:'彼は店員に助けを求めました。', hira:'かれは てんいんに たすけを もとめました。', full:'He asked a clerk for help.' },
-      { cloze:'The store ___ at 10 a.m.', answers:['opens'], ja:'店は午前10時に開きます。', hira:'みせは ごぜん じゅうじに あきます。', full:'The store opens at 10 a.m.' },
-      { cloze:'She is ___ money at the bank.', answers:['paying'], ja:'彼女は銀行でお金を払っています。', hira:'かのじょは ぎんこうで おかねを はらっています。', full:'She is paying money at the bank.' },
-      { cloze:'I will ___ the train to the city.', answers:['take'], ja:'私は電車で街に行きます。', hira:'わたしは でんしゃで まちに いきます。', full:'I will take the train to the city.' },
+      { cloze:'There is a ___ in the parking lot.', answers:['car'], ja:'駐車場に車があります。', hira:'ちゅうしゃじょう に くるま が あります', full:'There is a car in the parking lot.' },
+      { cloze:'The ___ is yellow.', answers:['bus'], ja:'そのバスは黄色です。', hira:'その ばす は きいろ です', full:'The bus is yellow.' },
+      { cloze:'A ___ is coming soon.', answers:['train'], ja:'すぐに電車が来ます。', hira:'すぐ に でんしゃ が きます', full:'A train is coming soon.' },
+      { cloze:'There is a ___ in front of the house.', answers:['bicycle'], ja:'家の前に自転車があります。', hira:'いえ の まえ に じてんしゃ が あります', full:'There is a bicycle in front of the house.' },
+      { cloze:'There is a ___ in the garage.', answers:['motorcycle'], ja:'ガレージにバイクがあります。', hira:'がれーじ に ばいく が あります', full:'There is a motorcycle in the garage.' },
+      { cloze:'There is a ___ delivering goods.', answers:['truck'], ja:'商品を届けているトラックがあります。', hira:'しょうひん を とどけている とらっく が あります', full:'There is a truck delivering goods.' },
+      { cloze:'There is an ___ flying in the sky.', answers:['airplane'], ja:'空に飛んでいる飛行機があります。', hira:'そら に とんでいる ひこうき が あります', full:'There is an airplane flying in the sky.' },
+      { cloze:'There is a ___ on the lake.', answers:['boat'], ja:'湖にボートがあります。', hira:'みずうみ に ぼーと が あります', full:'There is a boat on the lake.' },
+      { cloze:'There is a ___ station near my house.', answers:['subway'], ja:'私の家の近くに地下鉄駅があります。', hira:'わたし の いえ の ちかく に ちかてつえき が あります', full:'There is a subway station near my house.' },
+      { cloze:'There is a ___ in front of the hotel.', answers:['taxi'], ja:'ホテルの前にタクシーがあります。', hira:'ほてる の まえ に たくしー が あります', full:'There is a taxi in front of the hotel.' },
     ];
 
-    const READING = [
-      { en:'The train will leave at 7:30.', ja:'電車は7時30分に出発します。', hira:'でんしゃは しちじ さんじゅっぷんに しゅっぱつします。' },
-      { en:'Please show your ticket at the entrance.', ja:'入り口で切符を見せてください。', hira:'いりぐちで きっぷを みせてください。' },
-      { en:'The store will be closed on Sunday.', ja:'店は日曜日に休みです。', hira:'みせは にちようびに やすみです。' },
-      { en:'Welcome to City Hotel. Free breakfast is included.', ja:'シティホテルへようこそ。朝食は無料です。', hira:'してぃほてるへ ようこそ。ちょうしょくは むりょうです。' },
-      { en:'Big Sale! All shoes are 50% off this weekend.', ja:'大セール！今週末は靴が半額です。', hira:'だいせーる！こんしゅうまつは くつが はんがくです。' },
-      { en:'Notice: The library will close at 5 p.m. today.', ja:'お知らせ：図書館は今日午後5時に閉まります。', hira:'おしらせ：としょかんは きょう ごご ごじに しまります。' },
-      { en:'Email: Your flight has been delayed by one hour.', ja:'メール：あなたの飛行機は1時間遅れました。', hira:'めーる：あなたの ひこうきは いちじかん おくれました。' },
-      { en:'Caution: Please do not leave bags unattended.', ja:'注意：荷物を置きっぱなしにしないでください。', hira:'ちゅうい：にもつを おきっぱなしに しないで ください。' },
-      { en:'Meeting Room B is on the second floor.', ja:'会議室Bは2階にあります。', hira:'かいぎしつ びーは にかいに あります。' },
-      { en:'Lunch special: Soup and sandwich for five dollars.', ja:'ランチスペシャル：スープとサンドイッチが5ドルです。', hira:'らんち すぺしゃる：すーぷと さんどいっちが ごどるです。' },
-      { en:'Message: I will arrive at the station at 6:15.', ja:'メッセージ：私は6時15分に駅に着きます。', hira:'めっせーじ：わたしは ろくじ じゅうごふんに えきに つきます。' },
-      { en:'Announcement: The bus to the airport leaves from Gate 3.', ja:'案内：空港行きのバスは3番ゲートから出ます。', hira:'あんない：くうこういきの ばすは さんばん げーとから でます。' },
+    // Readings (10) — short, simple, graded
+    const READINGS = [
+      { en:'There is a car in the parking lot. The car is blue.', 
+        ja:'駐車場に車があります。その車は青いです。', 
+        hira:'ちゅうしゃじょう に くるま が あります。 その くるま は あおい です。' },
+
+      { en:'There are many buses at the station. One bus is yellow.', 
+        ja:'駅にバスがたくさんあります。１台は黄色です。', 
+        hira:'えき に ばす が たくさん あります。 いちだい は きいろ です。' },
+
+      { en:'A train is coming soon. The train is fast.', 
+        ja:'すぐに電車が来ます。その電車は速いです。', 
+        hira:'すぐ に でんしゃ が きます。 その でんしゃ は はやい です。' },
+
+      { en:'There is a bicycle in front of the house. It is old but reliable.', 
+        ja:'家の前に自転車があります。古いですが信頼できます。', 
+        hira:'いえ の まえ に じてんしゃ が あります。 ふるい ですが しんらい できます。' },
+
+      { en:'A motorcycle is in the garage. The motorcycle is loud.', 
+        ja:'ガレージにバイクがあります。そのバイクはうるさいです。', 
+        hira:'がれーじ に ばいく が あります。 その ばいく は うるさい です。' },
+
+      { en:'A truck is delivering goods. The truck is big and powerful.', 
+        ja:'商品を届けているトラックがあります。そのトラックは大きくて力強いです。', 
+        hira:'しょうひん を とどけている とらっく が あります。 その とらっく は おおきくて ちからづよい です。' },
+
+      { en:'There is an airplane flying in the sky. It has blue stripes.', 
+        ja:'空に飛んでいる飛行機があります。青いストライプがあります。', 
+        hira:'そら に とんでいる ひこうき が あります。 あおい すとらいぷ が あります。' },
+
+      { en:'There is a boat on the lake. It is small but fast.', 
+        ja:'湖にボートがあります。小さいけど速いです。', 
+        hira:'みずうみ に ぼーと が あります。 ちいさい けど はやい です。' },
+
+      { en:'There is a subway station near my house. It is crowded at rush hour.', 
+        ja:'私の家の近くに地下鉄駅があります。ラッシュアワーは混んでいます。', 
+        hira:'わたし の いえ の ちかく に ちかてつえき が あります。 らっしゅあわー は こんで います。' },
+
+      { en:'There is a taxi in front of the hotel. The taxi is cheap.', 
+        ja:'ホテルの前にタクシーがあります。そのタクシーは安いです。', 
+        hira:'ほてる の まえ に たくしー が あります。 その たくしー は やすい です。' },
     ];
 
     // -------------- State & Elements --------------
@@ -236,225 +275,123 @@
       mcArea: document.getElementById('mcArea'),
     };
 
-    // -------------- Helpers --------------
-    function shuffle(arr){
-      for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}
-      return arr;
-    }
-    function uniqueAnswersFromQuiz(){
-      const set = new Set();
-      QUIZ.forEach(q => q.answers.forEach(a => set.add(a.toLowerCase())));
-      return Array.from(set);
-    }
-    const ALL_QUIZ_WORDS = uniqueAnswersFromQuiz();
-
+    // Helpers
+    function shuffle(arr){ for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]} return arr; }
+    const ALL_QUIZ_WORDS = Array.from(new Set(
+      ['car','bus','train','bicycle','motorcycle','truck','airplane','boat','subway','taxi']
+    ));
     function mcOptionsFor(item, n=4){
-      const corrects = item.answers.map(a=>a.toLowerCase());
-      const correct = corrects[0];
-      const pool = ALL_QUIZ_WORDS.filter(v => !corrects.includes(v));
+      const corrects=item.answers.map(a=>a.toLowerCase());
+      const pool=ALL_QUIZ_WORDS.filter(v=>!corrects.includes(v));
       shuffle(pool);
-      const need = Math.max(0, n-1);
-      const choices = [correct, ...pool.slice(0, need)];
-      return shuffle(choices);
+      return shuffle([corrects[0], ...pool.slice(0,n-1)]);
     }
 
-    // -------------- Build Decks --------------
+    // Build deck
     function buildDeck(){
-      const mode = els.mode.value;
+      const mode=els.mode.value;
       if(mode==='vocab-j2e' || mode==='vocab-e2j'){
-        deck = VOCAB.map(x=>({
+        const combined=[...VEHICLES];
+        deck=combined.map(x=>({
           type:'vocab',
-          front: mode==='vocab-j2e' ? x.ja : x.en,
-          back:  mode==='vocab-j2e' ? x.en : x.ja,
-          hira: x.hira,
-          sideLabelFront: mode==='vocab-j2e' ? 'Japanese → English' : 'English → Japanese',
-          sideLabelBack:  mode==='vocab-j2e' ? 'English' : 'Japanese',
+          front:mode==='vocab-j2e'?x.ja:x.en,
+          back:mode==='vocab-j2e'?x.en:x.ja,
+          hira:x.hira,
+          sideLabelFront:mode==='vocab-j2e'?'Japanese → English':'English → Japanese',
+          sideLabelBack:mode==='vocab-j2e'?'English':'Japanese'
         }));
       } else if(mode==='sentences'){
-        deck = SENTENCES.map(s=>({
+        deck=SENTENCES.map(s=>({
           type:'sentence',
-          front: s.ja,
-          back: s.en + '\\n' + s.ja,
-          hira: s.hira,
-          sideLabelFront: 'Japanese sentence',
-          sideLabelBack: 'Answer (EN + JA)',
+          front:s.ja,
+          back:s.en+'\n'+s.ja,
+          hira:s.hira,
+          sideLabelFront:'Japanese sentence',
+          sideLabelBack:'Answer'
         }));
       } else if(mode==='qa'){
-        deck = QA.map(q=>({
+        deck=QA.map(q=>({
           type:'qa',
-          front: q.q_ja,
-          back: q.a_en + '\\n' + q.a_ja,
-          hira: q.q_hira + '\\n' + q.a_hira,
-          sideLabelFront: 'Question (JA)',
-          sideLabelBack: 'Answer (EN + JA)',
+          front:q.q_ja,
+          back:q.a_en+'\n'+q.a_ja,
+          hira:q.q_hira+'\n'+q.a_hira,
+          sideLabelFront:'Question (JA)',
+          sideLabelBack:'Answer'
         }));
       } else if(mode==='quiz'){
-        deck = QUIZ.map(q=>{
-          const choices = mcOptionsFor(q, 4);
-          return {
-            type:'quiz',
-            front: q.cloze,
-            back: q.full + '\\n' + q.ja,
-            hira: q.hira,
-            answers: q.answers,
-            choices,
-            sideLabelFront: 'Choose the missing word',
-            sideLabelBack: 'Answer (EN + JA)',
-          };
-        });
-      } else if(mode==='reading'){
-        deck = READING.map(r=>({
-          type:'reading',
-          front: r.en,
-          back: r.en + '\\n' + r.ja,
-          hira: r.hira,
-          sideLabelFront: 'Reading (EN)',
-          sideLabelBack: 'Reading (EN + JA)',
+        deck=QUIZ.map(q=>({
+          type:'quiz',
+          front:q.cloze,
+          back:q.full+'\n'+q.ja,
+          hira:q.hira,
+          answers:q.answers,
+          choices:mcOptionsFor(q,4),
+          sideLabelFront:'Choose',
+          sideLabelBack:'Answer'
         }));
-      }
-      index = 0; showingFront = true; render();
+      } else if(mode==='reading'){
+        deck=READINGS.map(r=>({
+          type:'reading',
+          front:r.ja,
+          back:r.en+'\n'+r.ja,
+          hira:r.hira,
+          sideLabelFront:'Reading (JA)',
+          sideLabelBack:'Reading (EN+JA)'
+        }));
+      } else { deck=[]; }
+      index=0;showingFront=true;render();
     }
 
-    // -------------- Render --------------
+    // Render
     function render(){
-      if(deck.length===0){ els.main.textContent='—'; els.sub.textContent='No cards'; els.counter.textContent='0 / 0'; return; }
-      const item = deck[index];
-      const mode = els.mode.value;
-      els.label.textContent = showingFront ? item.sideLabelFront : item.sideLabelBack;
-      const content = showingFront ? item.front : item.back;
-
-      // Main content & JA + hira logic
-      if((!showingFront) && (item.type==='qa' || item.type==='quiz' || item.type==='sentence' || item.type==='reading') && content.includes('\\n')){
-        const [line1, line2] = content.split('\\n'); // EN, JA
-        els.main.innerHTML = `<div style="font-size:22px;font-weight:700" class="${item.type==='reading'?'small':''}">${line1}</div>
-                              <div class="sub ${item.type==='reading'?'small':''}" style="margin-top:8px">${line2}</div>`;
-        if(item.hira){
-          els.hira.classList.remove('hidden');
-          if(item.type==='qa'){
-            const parts = item.hira.split('\\n');
-            const hiraToShow = showingFront ? parts[0] : (parts[1] || '');
-            els.hira.textContent = hiraToShow;
-          } else {
-            els.hira.textContent = item.hira;
-          }
-        } else { els.hira.classList.add('hidden'); els.hira.textContent=''; }
-      } else {
-        els.main.innerHTML = `<div class="${item.type==='reading'?'small':''}">${content}</div>`;
-        if(showingFront && (item.type==='vocab' && els.mode.value==='vocab-j2e' || item.type==='sentence' || item.type==='qa')){
-          if(item.hira){
-            els.hira.classList.remove('hidden');
-            if(item.type==='qa' && item.hira.includes('\\n')){
-              els.hira.textContent = item.hira.split('\\n')[0];
+      if(deck.length===0){els.main.textContent='—'; els.sub.textContent='Choose a mode'; return;}
+      const item=deck[index];
+      els.label.textContent=showingFront?item.sideLabelFront:item.sideLabelBack;
+      const content=showingFront?item.front:item.back;
+      if(!showingFront && content.includes('\n')){
+        const [en,ja]=content.split('\n');
+        els.main.innerHTML=`<div style="font-size:22px;font-weight:700">${en}</div><div class="sub">${ja}</div>`;
+      } else { els.main.textContent=content; }
+      if(item.hira){ els.hira.classList.remove('hidden'); els.hira.textContent=item.hira; } 
+      else { els.hira.classList.add('hidden'); els.hira.textContent=''; }
+      if(item.type==='quiz' && showingFront){
+        els.mcArea.classList.remove('hidden'); els.mcArea.innerHTML='';
+        item.choices.forEach(opt=>{
+          const btn=document.createElement('button'); btn.className='optbtn'; btn.textContent=opt;
+          btn.addEventListener('click',e=>{
+            e.preventDefault();
+            const norm=s=>s.toLowerCase().trim();
+            const isCorrect=item.answers.map(a=>norm(a)).includes(norm(opt));
+            if(isCorrect){
+              btn.classList.add('ok');
+              [...els.mcArea.querySelectorAll('button')].forEach(b=>b.disabled=true);
+              setTimeout(()=>{showingFront=false;render();},350);
             } else {
-              els.hira.textContent = item.hira;
+              btn.classList.add('bad'); btn.disabled=true;
             }
-          } else { els.hira.classList.add('hidden'); els.hira.textContent=''; }
-        } else {
-          els.hira.classList.add('hidden');
-          els.hira.textContent='';
-        }
-      }
-
-      // QUIZ MC only on front of quiz
-      if(mode==='quiz' && item.type==='quiz' && showingFront){
-        els.sub.textContent = 'Choose the correct word.';
-        els.mcArea.classList.remove('hidden');
-        els.mcArea.innerHTML = '';
-        item.choices.forEach(opt => {
-          const btn = document.createElement('button');
-          btn.className = 'optbtn';
-          btn.textContent = opt;
-          btn.addEventListener('click', (e)=>{
-            e.preventDefault(); e.stopPropagation();
-            const norm = (s)=>s.toLowerCase().trim();
-            const isCorrect = item.answers.map(a=>norm(a)).includes(norm(opt));
-            const allBtns = [...els.mcArea.querySelectorAll('button')];
-            allBtns.forEach(b=>b.disabled=true);
-            if(isCorrect){ btn.classList.add('ok'); } else { btn.classList.add('bad'); }
-            const correctBtn = allBtns.find(b => item.answers.map(a=>norm(a)).includes(norm(b.textContent)));
-            if(correctBtn) correctBtn.classList.add('ok');
-            setTimeout(()=>{ showingFront = false; render(); }, 350);
-          }, { passive:false });
+          });
           els.mcArea.appendChild(btn);
         });
-      } else {
-        els.mcArea.classList.add('hidden');
-        els.mcArea.innerHTML = '';
-        if(item.type==='quiz' && showingFront){
-          els.sub.textContent = 'Choose the correct word.';
-        } else {
-          els.sub.textContent = 'Tap / Space to flip · Swipe / ← → to navigate';
-        }
-      }
-
-      // Footer counters
-      els.counter.textContent = `${index+1} / ${deck.length}`;
-      els.bar.style.width = `${((index+1)/deck.length)*100}%`;
-
-      setHash();
+      } else { els.mcArea.classList.add('hidden'); els.mcArea.innerHTML=''; }
+      els.counter.textContent=`${index+1} / ${deck.length}`; els.bar.style.width=`${((index+1)/deck.length)*100}%`;
     }
 
-    // -------------- Navigation --------------
-    function prev(){ index = (index-1+deck.length)%deck.length; showingFront=true; render(); }
-    function next(){ index = (index+1)%deck.length; showingFront=true; render(); }
-    function flip(){ showingFront = !showingFront; render(); }
-    function shuffleDeck(){ deck = shuffle(deck); index=0; showingFront=true; render(); }
+    // Navigation
+    function prev(){index=(index-1+deck.length)%deck.length;showingFront=true;render();}
+    function next(){index=(index+1)%deck.length;showingFront=true;render();}
+    function flip(){showingFront=!showingFront;render();}
+    function shuffleDeck(){deck=shuffle(deck);index=0;showingFront=true;render();}
 
-    // -------------- URL Hash --------------
-    function setHash(){ location.hash = `#${els.mode.value}:${index}`; }
-    function readHash(){
-      const h = location.hash.replace('#','');
-      if(!h) return;
-      const [m, i] = h.split(':');
-      if(m && [...els.mode.options].some(o=>o.value===m)) els.mode.value = m;
-      if(i && !Number.isNaN(+i)) index = Math.max(0, Math.min(deck.length-1, +i));
-    }
-
-    // -------------- Events --------------
-    els.mode.addEventListener('change', ()=>{ buildDeck(); setHash(); });
-    document.getElementById('btnPrev').addEventListener('click', prev);
-    document.getElementById('btnNext').addEventListener('click', next);
-    document.getElementById('btnFlip').addEventListener('click', flip);
-    document.getElementById('btnShuffle').addEventListener('click', shuffleDeck);
-
-    // Keyboard
-    window.addEventListener('keydown', (e)=>{
-      if(e.code==='ArrowLeft'){ e.preventDefault(); prev(); }
-      else if(e.code==='ArrowRight'){ e.preventDefault(); next(); }
-      else if(e.code==='Space'){ e.preventDefault(); flip(); }
-      else if(e.key==='S' || e.key==='s'){ e.preventDefault(); shuffleDeck(); }
-      else if(e.key==='1' && els.mode.value==='quiz'){ const b=els.mcArea.querySelectorAll('button')[0]; if(b) b.click(); }
-      else if(e.key==='2' && els.mode.value==='quiz'){ const b=els.mcArea.querySelectorAll('button')[1]; if(b) b.click(); }
-      else if(e.key==='3' && els.mode.value==='quiz'){ const b=els.mcArea.querySelectorAll('button')[2]; if(b) b.click(); }
-      else if(e.key==='4' && els.mode.value==='quiz'){ const b=els.mcArea.querySelectorAll('button')[3]; if(b) b.click(); }
-    });
-
-    // Click/Touch to flip (disabled on Quiz front)
-    document.getElementById('card').addEventListener('click', (e)=>{
-      if(els.mode.value==='quiz' && showingFront) return;
-      flip();
-    }, { passive:true });
-
-    // Swipe
-    let touchStartX=null, touchStartY=null;
-    document.getElementById('card').addEventListener('touchstart', (e)=>{
-      const t=e.changedTouches[0]; touchStartX=t.clientX; touchStartY=t.clientY;
-    }, {passive:true});
-    document.getElementById('card').addEventListener('touchend', (e)=>{
-      const t=e.changedTouches[0]; if(touchStartX===null) return;
-      const dx=t.clientX - touchStartX; const dy=t.clientY - touchStartY;
-      if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)){
-        if(dx>0) prev(); else next();
-      } else if(Math.abs(dy)<10 && Math.abs(dx)<10){
-        if(!(els.mode.value==='quiz' && showingFront)) flip();
-      }
-      touchStartX=touchStartY=null;
-    }, {passive:true});
+    // Events
+    els.mode.addEventListener('change',buildDeck);
+    document.getElementById('btnPrev').addEventListener('click',prev);
+    document.getElementById('btnNext').addEventListener('click',next);
+    document.getElementById('btnFlip').addEventListener('click',flip);
+    document.getElementById('btnShuffle').addEventListener('click',shuffleDeck);
+    window.addEventListener('keydown',e=>{if(e.code==='ArrowLeft')prev(); else if(e.code==='ArrowRight')next(); else if(e.code==='Space'){e.preventDefault();flip();}});
 
     // Init
     buildDeck();
-    readHash();
-    render();
   </script>
 </body>
 </html>
